@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="BWApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Basket Module</title>
+    <script src="/scripts/angular.min.js"></script>
+    <script src="/scripts/controllers.js"></script>
+    <style>
+        body{
+            margin: 0 auto;
+            max-width: 1170px;
+            font-size: 14px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+        header{
+            background: #dedede;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: center;
+            width: 100%;
+        }
+        main{
+            width: 80%;
+            flex: 1 auto;
+        }
+        .prod{
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+
+            background: #ededed;
+        }
+        .prod div{
+            flex: 1 auto;
+        }
+        .detail{
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+
+            background: #bcbcbc;
+        }
+        .detail div{
+            flex: 1 auto;
+        }
+
+        aside{
+            width: 20%;
+            flex: 1 auto;
+        }
+        .mini{
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+
+            background: #d1d1d1;
+        }
+        .mini div{
+            flex: 1 auto;
+        }
+
+        .basketTotal{}
+        .basketTotal p{ text-align: right; }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Module Basket should be independent no need for it to know the rest of the HTML/app ... </h1>
+        <p>Here some HTML are bound for event only</p>
+        <p>Eventually tried to implement event agreggator</p>
+    </header>
+
+    <main>
+
+        <h2>Product list to display</h2>
+        <section class="prod" ng-controller="BookListCtrl">
+
+            <div ng-repeat="book in books track by $index">
+                <div class="books-list__info">
+                    <h3>{{book.title}}</h3>
+                    <p itemprop="author">{{book.author}}</p>
+                    <p class="books-list__format">{{book.details.format[0]}}</p>
+                    <div class="books-list__price">
+                        <p class="book-price">£{{book.details.price}}</p>
+                    </div>
+                </div>
+                <button ng-click="addToBasket( $index )" class="js-add-to-basket" data-isbn="{{book.details.ISBN}}">Add to basket</button>
+            </div>
+
+        </section>
+
+        <h2>Basket detail</h2>
+        <section class="detail" ng-controller="BasketCtrl">
+
+            <div ng-repeat="basketBook in bm.getBasket() track by $index" class="book-{{basketBook.id}}">
+                    <div class="books-list__info">
+                        <h3>{{basketBook.item}}</h3>
+                        <div class="books-list__price">
+                            <p class="book-price">&pound;{{basketBook.price}}</p>
+                        </div>
+                    </div>
+                    <div class="books-list__qty">
+                            <input type="number" step="1" value="{{basketBook.qty}}" ng-model="basketBook.qty"/>
+                        </div>
+                    <button class="js-remove-from-basket" ng-click="removeFromBasket( $index )"data-ISBN="{{basketBook.id}}">Remove</button>
+                </div>
+        </section>
+
+    </main>
+
+    <aside ng-controller="BasketCtrl">
+        <h2>Basket mini to see update</h2>
+        <section class="mini">
+            <div ng-repeat="basketBook in bm.getBasket() track by $index" class="book-{{basketBook.id}}">
+                    <div class="books-list__info">
+                        <h3>{{basketBook.item}}</h3>
+                        <div class="books-list__price">
+                            <p class="book-price">&pound;{{basketBook.price}}</p>
+                        </div>
+                    </div>
+                    <div class="books-list__qty">
+                            <input type="number" step="1" value="{{basketBook.qty}}" ng-model="basketBook.qty"/>
+                        </div>
+                    <button class="js-remove-from-basket" ng-click="removeFromBasket( $index )"data-ISBN="{{basketBook.id}}">Remove</button>
+                </div>
+        </section>
+        <section class="basketTotal">
+            <p>{{bm.getTotal()}}</p>
+        </section>
+    </aside>
+
+</body>
+</html>
